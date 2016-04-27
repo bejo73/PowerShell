@@ -2,6 +2,8 @@
 Add-Type -Path 'C:\Program Files (x86)\Microsoft SQL Server\100\SDK\Assemblies\Microsoft.SqlServer.Smo.dll'
 
 $serverInstances = @("MYSQLSERVER", "MYSQLSERVER\INSTANCE")
+
+$exportPath = "\\exportpath\"
  
 foreach ($serverInstance in $serverInstances)
 {
@@ -15,7 +17,7 @@ foreach ($serverInstance in $serverInstances)
  
       foreach ($job in $jobs)
       {
-         $fileName = "\\exportpath\" + $serverInstance + "_" + $job.Name + ".sql"
+         $fileName = $exportPath + $serverInstance + "_" + $job.Name + ".sql"
          $job.Script() | Out-File -Filepath $fileName
       }
    }
