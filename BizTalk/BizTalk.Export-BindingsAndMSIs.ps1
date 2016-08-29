@@ -68,7 +68,7 @@ foreach($application in $applications)
    Export-Bindings -Path BizTalk:\Applications\$name -Destination "$bindings\$name.xml"
 
    # Remove bindings from resource file
-   Get-Content $tmpResSpec | foreach-Object { [regex]::replace($_, '<Resource Type="System.BizTalk:BizTalkBinding" Luid="[./A-Za-z0-9]*" />', "") } | out-file "$resSpecNoBindings"
+   Get-Content $tmpResSpec | foreach-Object { [regex]::replace($_, '<Resource Type="System.BizTalk:BizTalkBinding" Luid="[. /A-Za-z0-9]*" />', "") } | out-file "$resSpecNoBindings"
 
    # Export MSI without bindings
    Export-Application -Path BizTalk:\Applications\$name -Package "$msi\$name.msi" -ResourceSpec $resSpecNoBindings
