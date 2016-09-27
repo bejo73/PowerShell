@@ -5,47 +5,51 @@
 # Description
 # -----------
 # Enables the tracking on the Microsoft Default pipelines (global)
-#  
-# Prerequisites
-# -------------
-# The BizTalk connection string is declared in $BIZTALK_CONNECTIONSTRING (suggested in profile.ps1)
 #
 # Usage
 # -----
 # iBiz.BizTalk.Enable-TrackingOnMicrosoftDefaultPipelines.ps1
 #
 
+$silent = $false
+
+$bizTalkSql = "."
+$bizTalkMgmtDb = "BizTalkMgmtDb"
+
 #
 # CheckPipelines
 #
-Function CheckPipelines($catalog)
+function CheckPipelines($catalog)
 {
-    Write-Host `r`n===================================
-    Write-Host "===   Check pipeline tracking   ==="
-    Write-Host ===================================`r`n 
+    if (!$silent)
+    {
+        Write-Host `r`n===================================
+        Write-Host "===   Check pipeline tracking   ==="
+        Write-Host ===================================`r`n 
+    }
 
-    $saveChanges = 0
+    $saveChanges = $false
     foreach($pipeline in $catalog.Pipelines)
     {
         if ($pipeline.FullName -match "Microsoft.BizTalk.DefaultPipelines")
         {
-            Write-Host $pipeline.FullName":`t"$pipeline.Tracking
+            if (!$silent) { Write-Host $pipeline.FullName":`t"$pipeline.Tracking }
             
             # ServiceStartEnd, MessageSendReceive, InboundMessageBody, OutboundMessageBody, PipelineEvents
             
             if ($pipeline.Tracking -ne "ServiceStartEnd, MessageSendReceive, PipelineEvents")
             {
-                Write-Host "Enabling tracking for "$pipeline.FullName
+                if (!$silent) { Write-Host "Enabling tracking for "$pipeline.FullName -ForegroundColor Green }
                 $pipeline.Tracking = "ServiceStartEnd, MessageSendReceive, PipelineEvents"
-                $saveChanges = 1
+                $saveChanges = $true
             }
         }
     }
-     
-    if ($saveChanges -eq 1)
+       
+    if ($saveChanges)
     {
-        $catalog.SaveChanges();
-        Write-Host "Changes saved"
+        $catalog.SaveChanges()
+        if (!$silent) { Write-Host "Changes saved" }
     }
     
 }
@@ -55,7 +59,7 @@ Function CheckPipelines($catalog)
 
 # Connect to the BizTalk Management database
 $Catalog = New-Object Microsoft.BizTalk.ExplorerOM.BtsCatalogExplorer
-$Catalog.ConnectionString = $BIZTALK_CONNECTIONSTRING
+$Catalog.ConnectionString = "SERVER=$bizTalkSql;DATABASE=$bizTalkMgmtDb;Integrated Security=SSPI"
 
 # Do the work
 CheckPipelines $Catalog
