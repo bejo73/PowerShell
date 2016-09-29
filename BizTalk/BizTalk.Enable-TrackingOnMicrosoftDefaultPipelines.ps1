@@ -8,7 +8,7 @@
 #
 # Usage
 # -----
-# iBiz.BizTalk.Enable-TrackingOnMicrosoftDefaultPipelines.ps1
+# BizTalk.Enable-TrackingOnMicrosoftDefaultPipelines.ps1
 #
 
 $silent = $false
