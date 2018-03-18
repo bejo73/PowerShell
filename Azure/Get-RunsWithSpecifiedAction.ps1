@@ -1,7 +1,7 @@
 ﻿<#
  # Get-RunsWithSpecifiedAction.ps1 
  #
- # This script prints out a list of the lates runs where the specified action was successfull.
+ # This script prints out a list of the latest runs where the specified action was successfull.
  # It can be used to check whether content has passed through a Logic App or not.
  # Default is last 31 days and 1000 rows in result.
  #
